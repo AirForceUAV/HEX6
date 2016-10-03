@@ -86,7 +86,7 @@ class Drone(object):
         while not self.vehicle.mode.name=='GUIDED' and not watcher.IsCancel():  #Wait until mode has changed            
             time.sleep(.1)
         self._log('Current mode :{0}'.format(self.vehicle.mode.name))
-        #Check is_armable
+        # Check is_armable
         self._log("Waiting for ability to arm...")
         while not self.vehicle.is_armable and not watcher.IsCancel():
             time.sleep(.1)
@@ -124,11 +124,11 @@ class Drone(object):
         if targetLocation is None:
             print 'Target is None!'
             return 1
-        self.vehicle.simple_goto(targetLocation,groundspeed=speed)
+        
 
-        while not (watcher.IsCancel() or self.Distance_to_target()<3):
-            print self.Distance_to_target()
-            time.sleep(.5)
+        while not watcher.IsCancel() and self.Distance_to_target()>=3:
+            self.vehicle.simple_goto(targetLocation,groundspeed=speed)
+            time.sleep(1)
         self._log('Reached Target Location!!!')
 
     
@@ -162,10 +162,10 @@ class Drone(object):
     def condition_yaw(self,heading,is_relative=1):
         '''After taking off, yaw commands are ignored until the first “movement” command has been received. 
         If you need to yaw immediately following takeoff then send a command to “move” to your current position'''
-        if heading<0 or heading>=360 or not isinstance(heading,int):
+        if heading<0 or heading>=360 or not str(heading).isdigit():
             print "0<=heading<360"
             return 0
-        if is_relative ==1:
+        if is_relative > 0:
             if heading == 0:
                 return 0            
             if heading<=180 and heading>0:
@@ -193,7 +193,7 @@ class Drone(object):
         self.vehicle.send_mavlink(msg)
 
     def condition_yaw2(self,heading):
-        if heading<0 or heading>=360 or not isinstance(heading,int):
+        if heading<0 or heading>=360 or not str(heading).isdigit():
             print "0<=heading<360"
             return 0
         if heading == 0:
@@ -226,7 +226,7 @@ class Drone(object):
         while not watcher.IsCancel() and angle_diff(self.get_heading(),target_angle)>1:
             # print self.get_heading()
             time.sleep(.1)
-        print 'Reached angle',self.get_heading()
+        self._log('Reached angle {}'.format(self.get_heading()))
 
     def send_body_offset_ned_velocity(self,forward=0,right=0,down=0):
         msg=self.vehicle.message_factory.set_position_target_local_ned_encode(
@@ -345,13 +345,17 @@ class Drone(object):
     
     def set_target_metres(self,dNorth,dEast,alt=None):
         location=self.get_location_metres(self.get_location(),dNorth,dEast)
-        if alt==None:
+        if not str(dNorth).isdigit() or not str(dEast).isdigit():
+            return -1
+        if not str(alt).isdigit():
             alt=self.get_alt()
         self.target=LocationGlobalRelative(location[0],location[1],alt)
-        print 'Target:',self.target
+        self._log('Target:{}'.format(self.target))
 
     def set_target(self,lat,lon,alt=None):
-        if alt==None:
+        if not str(lat).isdigit() or not str(lon).isdigit():
+            return -1
+        if not str(alt).isdigit():
             alt=self.get_alt()
         self.target=LocationGlobalRelative(lat,lon,alt)
 
@@ -451,6 +455,7 @@ class Drone(object):
         status["DistanceToTarget"]=self.Distance_to_target()
         status["IMU"]=self.vehicle.raw_imu.display()
         status["ServoOutput"]=self.vehicle.servo_output.display()
+        status['RPM']=2000
         status["TimeStamp"]=int(time.time())
         channels=[]
         for i in range(1,9):

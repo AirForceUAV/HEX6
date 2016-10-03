@@ -18,7 +18,7 @@ class Config(object):
         except Exception, e: 
             print "Error:cannot parse file:",file_name
             sys.exit(1)
-        self._cloud   =[self.get_node(0,1),self.get_node(0,2),self.get_node(0,3)]
+        self._cloud   =[self.get_node(0,1),self.get_node(0,2),self.get_node(0,3),self.get_node(0,4),self.get_node(0,5)]
         self._vehicle = [self.get_node(1,1),self.get_node(1,2),self.get_node(1,3)]
         self._lidar   = [self.get_node(2,1),self.get_node(2,2),self.get_node(2,3),self.get_node(2,4)]
         

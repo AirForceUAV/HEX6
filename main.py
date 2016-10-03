@@ -24,19 +24,22 @@ def on_message(client, userdata, msg):
 		[mqttPool.putRequest(req) for req in requests]
 	else:
 		CancelWatcher.Cancel=True
-		drone.brake()
-		# requests = threadpool.makeRequests(eval_wrapper,("drone.brake()",))
-		# [mqttPool.putRequest(req) for req in requests]
+		# drone.brake()
+		requests = threadpool.makeRequests(eval_wrapper,("drone.brake()",))
+		[mqttPool.putRequest(req) for req in requests]
 
 
-def init_mqtt(ip,port):
+def init_mqtt(ip,port=1883,username="",password=""):
 	import paho.mqtt.client as mqtt	
 	client = mqtt.Client(client_id='companion',clean_session=True,userdata=None)
-	client.reinitialise(client_id='companion',clean_session=True, userdata=None)
+	# client.reinitialise(client_id='companion',clean_session=True, userdata=None)
+	client._username=username
+	client._password=password
 	client.on_connect = on_connect
 	client.on_message = on_message
 	client.connect(ip, port)
-	client.loop_start()		
+	# client.loop_forever()   # blocking
+	client.loop_start()	      # non-blocking
 	return client
 
 if __name__=="__main__":
@@ -49,7 +52,7 @@ if __name__=="__main__":
 	
 	if cloud[0]==1:
 		print 'Connecting to Cloud ...'
-		client=init_mqtt(cloud[1],cloud[2])
+		client=init_mqtt(cloud[1],cloud[2],cloud[3],cloud[4])
 		
 		while True:
 			client.publish('FlightLog',drone.FlightLog())	

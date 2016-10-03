@@ -3,8 +3,10 @@
     <entry index="0" name="Cloud">
         <description>Cloud param.</description>
         <param index="1" value="1">Whether is cloud module open? 0:close 1:open</param>
-        <param index="2" value="123.57.44.174">Cloud IP Adress</param>
-        <param index="3" value="1883">Cloud Port Number </param>      
+        <param index="2" value="queue.airforceuav.com">Cloud IP Adress</param>
+        <param index="3" value="1883">Cloud Port Number </param>
+        <param index="4" value="AirForceUAV">Cloud username. </param>
+        <param index="5" value="AirForceUAV123">Cloud password. </param>     
     </entry>
      <entry index="1" name="vehicle">
         <description>vehilcle param.</description>
@@ -14,7 +16,7 @@
     </entry>
     <entry index="2" name="Lidar">
         <description>Lidar module.</description>
-        <param index="1" value="1">Whether is Lidar module open? 0:close 1:open </param>
+        <param index="1" value="-1">Whether is Lidar module open? 0:close 1:open </param>
         <param index="2" value="/dev/ttyUSB0">Serial port</param>
         <param index="3" value="1500">Safety Distance. </param>
         <param index="4" value="3000">Detection Distance. </param>
