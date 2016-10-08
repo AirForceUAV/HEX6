@@ -48,7 +48,7 @@ class CancelWatcher(object):
     Cancel=False
     count=0
     def __init__(self):
-        if self.__class__.count==0:
+        if self.__class__.count==0 and self.__class__.Cancel==True:
             self.__class__.Cancel = False
         self.__class__.count+=1
     def IsCancel(self):
