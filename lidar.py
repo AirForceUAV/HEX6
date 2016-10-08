@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import time,math,os
+import time,math,os,struct
 from vehicle import Drone
 from library import angle_heading_target,_angle,get_distance_metres
 from library import CancelWatcher,Singleton
@@ -56,6 +56,7 @@ class Lidar(object):
         while not watcher.IsCancel():
             current_location =self.vehicle.get_location()
             distance=round(get_distance_metres(current_location,target),2)
+            self._log('Cur{},target{}'.format(current_location,target))
             self._log("Distance to Target {}m".format(distance))
             if distance<3:
                 self._log("Reached Target Waypoint!")
@@ -86,12 +87,12 @@ if __name__=='__main__':
     #   raw_input('Next')
     #   print lidar.Decision(0)
     lidar=Lidar(vehicle)
-    vehicle.arm()
-    vehicle.takeoff()
+    # vehicle.arm()
+    # vehicle.takeoff()
     vehicle.set_target(0,30)
-    vehicle.Guided()
+    # vehicle.Guided()
     # time.sleep(30)
-    vehicle.RTL()
-    # lidar.Guided_Avoid()
-    # lidar.vehicle.close()
+    # vehicle.RTL()
+    lidar.Guided_Avoid()
+    vehicle.close()
 
