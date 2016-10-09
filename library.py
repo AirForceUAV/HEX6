@@ -28,11 +28,12 @@ def get_distance_metres(aLocation1, aLocation2):
     dlong= aLocation2.lon - aLocation1.lon
     return math.sqrt((dlat*dlat) + (dlong*dlong)) * 1.113195e5
 
-def angle_diff(angle1,angle2):
-    diff=(360+angle2-angle1)%360
-    if diff>180:
-        diff=360-180
-    return diff
+def angle_diff(angle1,angle2,sign):
+    diff=(360+sign*(angle2-angle1))%360
+    if diff<180:
+        return True
+    else:
+        return False
     
 def _angle(angle):
     if angle>180:

@@ -223,7 +223,7 @@ class Drone(object):
         0, 0, 0)    # param 5 ~ 7 not used
         # send command to vehicle
         self.vehicle.send_mavlink(msg)
-        while not watcher.IsCancel() and angle_diff(self.get_heading(),target_angle)>1:
+        while not watcher.IsCancel() and angle_diff(self.get_heading(),target_angle,is_cw):
             # print self.get_heading()
             time.sleep(.1)
         self._log('Reached angle {}'.format(self.get_heading()))
