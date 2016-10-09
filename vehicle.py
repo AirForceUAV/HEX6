@@ -6,7 +6,7 @@ import time,math,json,threadpool
 from pymavlink import mavutil
 from my_vehicle import MyVehicle
 from config import config
-from library import angle_diff,get_distance_metres
+from library import angle_diff,get_distance_metres,isNum
 from library import Singleton,CancelWatcher
 
 
@@ -162,7 +162,7 @@ class Drone(object):
     def condition_yaw(self,heading,is_relative=1):
         '''After taking off, yaw commands are ignored until the first “movement” command has been received. 
         If you need to yaw immediately following takeoff then send a command to “move” to your current position'''
-        if heading<0 or heading>=360 or not str(heading).isdigit():
+        if heading<0 or heading>=360 or not isNum(heading):
             print "0<=heading<360"
             return 0
         if is_relative > 0:
@@ -193,7 +193,7 @@ class Drone(object):
         self.vehicle.send_mavlink(msg)
 
     def condition_yaw2(self,heading):
-        if heading<0 or heading>=360 or not str(heading).isdigit():
+        if heading<0 or heading>=360 or not isNum(heading):
             print "0<=heading<360"
             return 0
         if heading == 0:
@@ -345,17 +345,17 @@ class Drone(object):
     
     def set_target_metres(self,dNorth,dEast,alt=None):
         location=self.get_location_metres(self.get_location(),dNorth,dEast)
-        if not str(dNorth).isdigit() or not str(dEast).isdigit():
+        if not isNum(dNorth) or not isNum(dEast):
             return -1
-        if not str(alt).isdigit():
+        if not isNum(alt):
             alt=self.get_alt()
         self.target=LocationGlobalRelative(location[0],location[1],alt)
         self._log('Target:{}'.format(self.target))
 
     def set_target(self,lat,lon,alt=None):
-        if not str(lat).isdigit() or not str(lon).isdigit():
+        if not isNum(lat) or not isNum(lon):
             return -1
-        if not str(alt).isdigit():
+        if not isNum(alt):
             alt=self.get_alt()
         self.target=LocationGlobalRelative(lat,lon,alt)
 

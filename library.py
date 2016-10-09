@@ -45,6 +45,21 @@ def angle_heading_target(origin,target,heading):
     heading_target=(360+target_north-heading)%360
     return int(heading_target)
 
+def isNum(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+    return False
 class CancelWatcher(object):
     Cancel=False
     count=0
@@ -71,6 +86,6 @@ class Singleton(type):
 
 
 if __name__=='__main__':
-    pass
+    print isNum(-21.1)
    
 
