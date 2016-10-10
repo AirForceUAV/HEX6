@@ -346,7 +346,7 @@ class Drone(object):
         location=self.get_location_metres(self.get_location(),dNorth,dEast)
         if not isNum(dNorth) or not isNum(dEast):
             return -1
-        if not isNum(alt):
+        if alt==None:
             alt=self.get_alt()
         self.target=LocationGlobalRelative(location[0],location[1],alt)
         self._log('Target:{}'.format(self.target))
@@ -354,7 +354,7 @@ class Drone(object):
     def set_target(self,lat,lon,alt=None):
         if not isNum(lat) or not isNum(lon):
             return -1
-        if not isNum(alt):
+        if alt==None:
             alt=self.get_alt()
         self.target=LocationGlobalRelative(lat,lon,alt)
 
@@ -492,13 +492,14 @@ class Drone(object):
 if __name__=="__main__":
 
     drone=Drone()
-    print drone.FlightLog()
+    
     drone.arm()
-    # drone.takeoff()
-    # drone.set_target_metres(50,0)
+    drone.takeoff()
+    drone.set_target_metres(50,0)
     # drone.set_groundspeed(3)
     # print drone.get_target()
-    # drone.Guided()
+    drone.Guided()
+    # print drone.FlightLog()
     # drone.condition_yaw2(230)
     # time.sleep(5)
     # drone.RTL()
