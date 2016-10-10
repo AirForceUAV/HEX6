@@ -71,13 +71,12 @@ class Drone(object):
 
     def arm(self):
         watcher=CancelWatcher()
-
+        self._log('Waiting for GPS!')
+        while self.num_stars()<9:
+            self._log('Num stars {}'.format(self.num_stars()))
+            time.sleep(1)
         self.home_location = self.get_location()
         home=self.get_home()
-        home_str="{0},{1},{2}".format(home.lat,home.lon,home.alt)
-        self._log('Home is:%s'%home_str)
-        if self.mqtt is not None:
-            self.mqtt.publish("Home",home_str)
 
         # Set GUIDED Mode
         self._log("Set Vehicle.mode = GUIDED") 
@@ -91,7 +90,7 @@ class Drone(object):
         while not self.vehicle.is_armable and not watcher.IsCancel():
             time.sleep(.1)
 
-        #Armed
+        # Armed
         self.vehicle.armed = True
         self._log("Waiting for arming...")
         while not self.vehicle.armed and not watcher.IsCancel():                
@@ -410,8 +409,8 @@ class Drone(object):
     def Velocity_info(self):
         v=self.vehicle.velocity
         return "{},{},{}".format(v[0],v[1],v[2])
-    def GPS_info(self):
-        return str(self.vehicle.gps_0.satellites_visible)
+    def num_stars(self):
+        return self.vehicle.gps_0.satellites_visible
     
     def Distance_from_home(self):
         if self.get_home() is not None:
@@ -493,16 +492,16 @@ class Drone(object):
 if __name__=="__main__":
 
     drone=Drone()
-    # print drone.FlightLog()
+    print drone.FlightLog()
     drone.arm()
-    drone.takeoff()
-    drone.set_target_metres(50,0)
-    drone.set_groundspeed(3)
+    # drone.takeoff()
+    # drone.set_target_metres(50,0)
+    # drone.set_groundspeed(3)
     # print drone.get_target()
-    drone.Guided()
+    # drone.Guided()
     # drone.condition_yaw2(230)
-    time.sleep(5)
-    drone.RTL()
+    # time.sleep(5)
+    # drone.RTL()
     drone.close()
     print("Completed")
     
