@@ -10,15 +10,15 @@
     </entry>
      <entry index="1" name="vehicle">
         <description>vehilcle param.</description>
-        <param index="1" value="1">Whether is vehicle open? 0:close 1:open</param>
-        <param index="2" value="/dev/ttyACM0">Port .{'sitl' '/dev/ttyACM0' '/dev/ttyUSB0'}</param>
-        <param index="3" value="115200">Drone Port Number .such as 'sitl 115200' '/dev/ttyACM0 115200'</param>
+        <param index="1" value="1" unit="bool">Whether is vehicle open? 0:close 1:open</param>
+        <param index="2" value="/dev/ttyACM0" unit="Device">Port .{'sitl' '/dev/ttyACM0' '/dev/ttyUSB0'}</param>
+        <param index="3" value="115200" unit="Baudrate">Drone Port Number .such as 'sitl 115200' '/dev/ttyACM0 115200'</param>
     </entry>
     <entry index="2" name="Lidar">
         <description>Lidar module.</description>
-        <param index="1" value="1">Whether is Lidar module open? 0:close 1:open </param>
-        <param index="2" value="/dev/ttyUSB0">Serial port</param>
-        <param index="3" value="1500">Safety Distance. </param>
-        <param index="4" value="3000">Detection Distance. </param>
+        <param index="1" value="1" unit="bool">Whether is Lidar module open? 0:close 1:open </param>
+        <param index="2" value="/dev/ttyUSB0" unit="Device">Serial port</param>
+        <param index="3" value="2000" unit="mm">Vehicle Size. </param>
+        <param index="4" value="3000" unit="mm">Safety Distance. </param>
     </entry>
 </config>
