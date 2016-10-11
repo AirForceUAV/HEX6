@@ -30,7 +30,7 @@ def get_distance_metres(aLocation1, aLocation2):
 
 def angle_diff(angle1,angle2,sign):
     diff=(360+sign*(angle2-angle1))%360
-    if diff<180 and diff>2:
+    if diff<180:
         return True
     else:
         return False
