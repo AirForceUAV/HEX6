@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import time,math,os,struct
 from vehicle import Drone
-from library import angle_heading_target,_angle,get_distance_metres
+from library import angle_heading_target,_angle,get_distance_metres,get_bearing
 from library import CancelWatcher,Singleton,_angle
 from config import config
 
@@ -34,7 +35,7 @@ class Lidar(object):
         angle = (360 - angle) %360;
         return angle
 
-    def Guided_Avoid(self,_type='Guided',velocity=1,checktime=1,deviation=10):
+    def Guided_Avoid2(self,_type='Guided',velocity=1,checktime=1,deviation=5):
         if con[0] ==0:
             print 'Lidar is closed!!!'
             return 1       
@@ -56,21 +57,67 @@ class Lidar(object):
         while not watcher.IsCancel():
             current_location =self.vehicle.get_location()
             distance=round(get_distance_metres(current_location,target),2)
-            self._log('Cur{},target{}'.format(current_location,target))
+            # self._log('Cur{},target{}'.format(current_location,target))
             self._log("Distance to Target {}m".format(distance))
             if distance<3:
                 self._log("Reached Target Waypoint!")
-                vehicle.brake()
+                vehicle.brake(velocity)
                 return 1    
             angle=angle_heading_target(current_location,target,self.vehicle.get_heading())
             angle_avoid=self.Decision(angle)
             if _angle(angle_avoid)>deviation:
-                self.vehicle.brake()
-                print 'turn',angle_avoid
+                self.vehicle.brake(velocity)
+                print 'Turn',angle_avoid
                 self.vehicle.condition_yaw2(angle_avoid)               
             self.vehicle.forward(velocity)
             time.sleep(checktime)
         return 0
+
+    def Guided_Avoid(self,_type='Guided',velocity=1,checktime=1,deviation=10):
+        if con[0] ==0:
+            print 'Lidar is closed!!!'
+            return 1       
+        watcher=CancelWatcher()
+        if _type is "Guided":
+            target=self.vehicle.get_target()
+            if target is None:
+                self._log("Target is None!")
+                return -1
+            self._log('Guided with Avoidance to {}'.format(target))
+            
+        elif _type is 'RTL':
+            target=self.vehicle.get_home()
+            if target is None:
+                self._log("Home is None!")
+                return -1
+            self._log('RTL ! Home is {}'.format(target))
+
+        self.vehicle.condition_yaw2(get_bearing(self.vehicle.get_heading(),target))
+
+        while not watcher.IsCancel():
+            current_location =self.vehicle.get_location()
+            distance=round(get_distance_metres(current_location,target),2)
+            # self._log('Cur:{},target:{}'.format(current_location,target))
+            self._log("Distance to Target {}m".format(distance))
+            if distance<3:
+                self._log("Reached Target Waypoint!")
+                vehicle.brake(velocity)
+                return 1
+            angle=angle_heading_target(current_location,target,self.vehicle.get_heading())
+            angle_avoid=self.Decision(angle)
+            
+            Sin=math.sin(math.radians(angle_avoid))
+            Cos=math.cos(math.radians(angle_avoid))
+            forward_v = round(velocity*Cos,1)
+            right_v   = round(velocity*Sin,1)
+            print 'Turn:{} forward:{}m/s right:{}m/s'.format(angle_avoid,forward_v,right_v)     
+            self.vehicle.send_body_offset_ned_velocity(forward_v,right_v,0)
+            time.sleep(checktime)
+        return 0
+
+    def RTL_Avoid():
+        self.Guided_Avoid(_type='RTL')
+
     def _log(self,msg):
         self.vehicle._log(msg)
 

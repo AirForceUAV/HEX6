@@ -114,7 +114,7 @@ class Drone(object):
                     self._log("Reached target altitude!!!")
                     break
                 time.sleep(.5)
-            self.brake()
+            self.brake(0)
 
     def Guided(self,speed=3):
         watcher=CancelWatcher()
@@ -124,7 +124,6 @@ class Drone(object):
             print 'Target is None!'
             return 1
         
-
         while not watcher.IsCancel() and self.Distance_to_target()>=3:
             self.vehicle.simple_goto(targetLocation,groundspeed=speed)
             time.sleep(1)
@@ -223,7 +222,7 @@ class Drone(object):
         # send command to vehicle
         self.vehicle.send_mavlink(msg)
         while not watcher.IsCancel() and angle_diff(self.get_heading(),target_angle,is_cw):
-            # print self.get_heading()
+            print "Cur:{} target:{}".format(self.get_heading(),target_angle)
             time.sleep(.1)
         self._log('Reached angle {}'.format(self.get_heading()))
 
@@ -276,7 +275,7 @@ class Drone(object):
             times+=1
             self.forward(velocity)
             time.sleep(1)
-        self.brake()
+        self.brake(velocity)
 
     def backward_brake(self,distance=1.0,velocity=1.0):
         self._log("Backward to {0}m,velocity is {1}m/s".format(distance,velocity))
@@ -287,7 +286,7 @@ class Drone(object):
             times+=1
             self.backward(velocity)
             time.sleep(1)
-        self.brake()
+        self.brake(velocity)
         
 
     def roll_left_brake(self,distance=1.0,velocity=1.0):
@@ -299,7 +298,7 @@ class Drone(object):
             times+=1
             self.roll_left(velocity)
             time.sleep(1)
-        self.brake()
+        self.brake(velocity)
 
     def roll_right_brake(self,distance=1.0,velocity=1.0):
         self._log("Right to {0}m,velocity is {1}m/s".format(distance,velocity))
@@ -310,7 +309,7 @@ class Drone(object):
             times+=1
             self.roll_right(velocity)
             time.sleep(1)
-        self.brake()
+        self.brake(velocity)
     
 
     def up_brake(self,distance=1.0,velocity=0.5):
@@ -322,7 +321,7 @@ class Drone(object):
             times+=1
             self.up(velocity)
             time.sleep(1)
-        self.brake()
+        self.brake(velocity)
 
     def down_brake(self,distance=1.0,velocity=0.5):
         self._log("Down to {0}m,velocity is {1}m/s".format(distance,velocity))
@@ -333,11 +332,17 @@ class Drone(object):
             times+=1
             self.down(velocity)
             time.sleep(1)
-        self.brake()
+        self.brake(velocity)
 
-    def brake(self):
+    def brake(self,velocity=1):
         self._log('Brake')
         # self.send_body_offset_ned_position(0,0,0)
+        self.send_body_offset_ned_velocity(0.8*velocity,0,0)
+        time.sleep(.2)
+        self.send_body_offset_ned_velocity(0.5*velocity,0,0)
+        time.sleep(.2)
+        self.send_body_offset_ned_velocity(0.2*velocity,0,0)
+        time.sleep(.2)
         self.send_body_offset_ned_velocity(0,0,0)
 
     def get_heading(self):
