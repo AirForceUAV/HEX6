@@ -35,7 +35,7 @@ class Lidar(object):
         angle = (360 - angle) %360;
         return angle
 
-    def Guided_Avoid2(self,_type='Guided',velocity=1,checktime=1,deviation=5):
+    def Guided_Avoid(self,_type='Guided',velocity=1,checktime=1,deviation=5):
         if con[0] ==0:
             print 'Lidar is closed!!!'
             return 1       
@@ -73,7 +73,7 @@ class Lidar(object):
             time.sleep(checktime)
         return 0
 
-    def Guided_Avoid(self,_type='Guided',velocity=1,checktime=1,deviation=10):
+    def Guided_Avoid2(self,_type='Guided',velocity=1,checktime=1,deviation=10):
         if con[0] ==0:
             print 'Lidar is closed!!!'
             return 1       
@@ -92,7 +92,7 @@ class Lidar(object):
                 return -1
             self._log('RTL ! Home is {}'.format(target))
 
-        self.vehicle.condition_yaw2(get_bearing(self.vehicle.get_heading(),target))
+        self.vehicle.condition_yaw2(angle_heading_target(self.vehicle.get_location(),target,self.vehicle.get_heading()))
 
         while not watcher.IsCancel():
             current_location =self.vehicle.get_location()
