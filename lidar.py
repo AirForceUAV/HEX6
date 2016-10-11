@@ -34,7 +34,7 @@ class Lidar(object):
         angle = (360 - angle) %360;
         return angle
 
-    def Guided_Avoid(self,_type='Guided',velocity=1,checktime=0.5,deviation=2):
+    def Guided_Avoid(self,_type='Guided',velocity=1,checktime=1,deviation=10):
         if con[0] ==0:
             print 'Lidar is closed!!!'
             return 1       

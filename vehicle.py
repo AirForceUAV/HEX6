@@ -100,7 +100,7 @@ class Drone(object):
         self._log("DisArmed")
         self.vehicle.armed=False
         
-    def takeoff(self,alt=4):
+    def takeoff(self,alt=3):
         watcher=CancelWatcher()
         if self.vehicle.armed==False:
             self._log("Please arm!")
@@ -249,6 +249,7 @@ class Drone(object):
         self.vehicle.send_mavlink(msg)
 
     def forward(self,velocity=1.0):
+        print 'forward'
         self.send_body_offset_ned_velocity(velocity,0,0)
     def backward(self,velocity=1.0):
         self.send_body_offset_ned_velocity(-velocity,0,0)
