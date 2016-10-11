@@ -21,4 +21,35 @@
         <param index="3" value="2000" unit="mm">Vehicle Size. </param>
         <param index="4" value="3000" unit="mm">Safety Distance. </param>
     </entry>
+    <entry index="3" name="Distance">
+        <description>Default Distance.</description>
+        <param index="1" value="3" unit="m">Default Altitude</param>
+        <param index="2" value="1" unit="m">AIL Distance</param>
+        <param index="3" value="1" unit="m">ROLL Distance</param>
+        <param index="4" value="0.5" unit="m">ELE Distance</param>
+    </entry>
+    <entry index="4" name="Speed">
+        <description>Default Speed.</description>
+        <param index="1" value="3" unit="m/s">Guided Speed</param>
+        <param index="2" value="1" unit="m/s">AIL Speed</param>
+        <param index="3" value="1" unit="m/s">ROLL Speed</param>
+        <param index="4" value="1" unit="m/s">ELE Speed</param>
+        <param index="5" value="1" unit="m/s">Avoid Speed</param>
+    </entry>
+    <entry index="5" name="Angle">
+        <description>Default angle.</description>
+        <param index="1" value="10">Turn more angle in condition_yaw2().</param>
+        <param index="2" value="3" >YAW angle.</param>
+        <param index="3" value="3" >Ignore angle in Avoidance.</param>
+    </entry>
+    <entry index="6" name="Time">
+        <description>Default time.</description>
+        <param index="1" value="1" >Checktime in Avoid</param>
+    </entry>
+    <entry index="7" name="Way">
+        <description>Default time.</description>
+        <param index="1" value="2" >Guided with Avoid Way</param>
+        <param index="2" value="2" >RTL    with Avoid Way</param>
+    </entry>
+
 </config>

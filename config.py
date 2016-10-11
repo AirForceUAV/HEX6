@@ -2,7 +2,7 @@
 #coding:utf-8
 
 import sys
-from library import Singleton
+from library import Singleton,isNum
 
 class Config(object):
     __metaclass__=Singleton
@@ -18,21 +18,31 @@ class Config(object):
         except Exception, e: 
             print "Error:cannot parse file:",file_name
             sys.exit(1)
-        self._cloud   =[self.get_node(0,1),self.get_node(0,2),self.get_node(0,3),self.get_node(0,4),self.get_node(0,5)]
-        self._vehicle = [self.get_node(1,1),self.get_node(1,2),self.get_node(1,3)]
-        self._lidar   = [self.get_node(2,1),self.get_node(2,2),self.get_node(2,3),self.get_node(2,4)]
-        
+        self._cloud   = self.get_config(0,5)
+        self._vehicle = self.get_config(1,3)
+        self._lidar   = self.get_config(2,4)
+        self._distance= self.get_config(3,4,2)
+        self._speed   = self.get_config(4,5,2)
+        self._angle   = self.get_config(5,3)
+        self._time    = self.get_config(6,1)
+        self._way     = self.get_config(7,2)
 
     def isInt(self,x):
         try:
             return isinstance(int(x),int)
         except ValueError:
             return False
-
-    def get_node(self,param1,param2):
+    def isFloat(self,x):
+        try:
+            return isinstance(float(x),float)
+        except ValueError:
+            return False
+    def get_node(self,param1,param2,_type):
         value=self._root[param1][param2].get('value')
-        if self.isInt(value) is True:
+        if self.isInt(value) and _type==1:
             return int(value)
+        elif self.isFloat(value) and _type==2:
+            return float(value)
         else:
             return value
     def get_cloud(self):
@@ -41,13 +51,35 @@ class Config(object):
         return self._vehicle
     def get_lidar(self):
         return self._lidar
+    def get_distance(self):
+        return self._distance
+    def get_speed(self):
+        return self._speed
+    def get_angle(self):
+        return self._angle
+    def get_time(self):
+        return self._time
+    def get_way(self):
+        return self._way
+    def get_config(self,index,num,_type=1):
+        result=[]
+        times=1
+        while times<=num:
+            result.append(self.get_node(index,times,_type))
+            times+=1
+        return result
 
 
 # Global config
 config=Config()
 
 if __name__=="__main__":
-    print config.get_vehicle()
-    print config.get_lidar()
-    print config.get_cloud()
+    print 'cloud',config.get_cloud()
+    print "vehicle",config.get_vehicle()
+    print 'lidar',config.get_lidar()    
+    print 'distance',config.get_distance()
+    print 'speed',config.get_speed()
+    print 'angle',config.get_angle()
+    print 'time',config.get_time()
+    print 'avoidance way',config.get_way()
 

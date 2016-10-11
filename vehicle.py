@@ -100,7 +100,7 @@ class Drone(object):
         self._log("DisArmed")
         self.vehicle.armed=False
         
-    def takeoff(self,alt=3):
+    def takeoff(self,alt=config.get_distance()[0]):
         watcher=CancelWatcher()
         if self.vehicle.armed==False:
             self._log("Please arm!")
@@ -116,7 +116,7 @@ class Drone(object):
                 time.sleep(.5)
             self.brake()
 
-    def Guided(self,speed=3):
+    def Guided(self,speed=config.get_speed()[0]):
         watcher=CancelWatcher()
         targetLocation=self.get_target()
         self._log('Guided to {}'.format(targetLocation))
@@ -207,8 +207,10 @@ class Drone(object):
             heading=360-heading
             target_angle=(360+self.get_heading()-heading)%360
             print 'Turn Left ',heading
+
+        heading+=config.get_angle()[0]    #Turn More Angle
             
-        # create the CONDITION_YAW command using command_long_encode()
+        # Create the CONDITION_YAW command using command_long_encode()
 
         msg =self. vehicle.message_factory.command_long_encode(
         0, 0,    # target system, target component
@@ -286,7 +288,7 @@ class Drone(object):
             times+=1
             self.backward(velocity)
             time.sleep(1)
-        self.brake()
+        self.brake(-velocity)
         
 
     def roll_left_brake(self,distance=1.0,velocity=1.0):
@@ -338,12 +340,13 @@ class Drone(object):
         self._log('Brake')
         # self.send_body_offset_ned_position(0,0,0)
         if not (v1==0 and v2==0 and v3==0):
-            self.send_body_offset_ned_velocity(0.8*v1,0.8*v2,0.8*v3)
-            time.sleep(.2)
-            self.send_body_offset_ned_velocity(0.5*v1,0.5*v2,0.5*v3)
-            time.sleep(.2)
-            self.send_body_offset_ned_velocity(0.2*v1,0.2*v2,0.2*v3)
-            time.sleep(.2)
+            times=10
+            while times>0:
+                times-=2
+                k=0.1*times
+                self.send_body_offset_ned_velocity(k*v1,k*v2,k*v3)
+                time.sleep(.2)
+
         self.send_body_offset_ned_velocity(0,0,0)
 
     def get_heading(self):

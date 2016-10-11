@@ -60,6 +60,7 @@ def isNum(s):
         pass
 
     return False
+
 class CancelWatcher(object):
     Cancel=False
     count=0
