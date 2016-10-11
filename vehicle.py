@@ -275,7 +275,7 @@ class Drone(object):
             times+=1
             self.forward(velocity)
             time.sleep(1)
-        self.brake()
+        self.brake(velocity)
 
     def backward_brake(self,distance=1.0,velocity=1.0):
         self._log("Backward to {0}m,velocity is {1}m/s".format(distance,velocity))
@@ -342,7 +342,7 @@ class Drone(object):
             time.sleep(.2)
             self.send_body_offset_ned_velocity(0.5*v1,0.5*v2,0.5*v3)
             time.sleep(.2)
-            self.send_body_offset_ned_velocity(0.2*v1,0,2*v2,0.2*v3)
+            self.send_body_offset_ned_velocity(0.2*v1,0.2*v2,0.2*v3)
             time.sleep(.2)
         self.send_body_offset_ned_velocity(0,0,0)
 
