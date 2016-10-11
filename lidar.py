@@ -101,7 +101,7 @@ class Lidar(object):
             self._log("Distance to Target {}m".format(distance))
             if distance<3:
                 self._log("Reached Target Waypoint!")
-                vehicle.brake(velocity)
+                vehicle.brake()
                 return 1
             angle=angle_heading_target(current_location,target,self.vehicle.get_heading())
             angle_avoid=self.Decision(angle)
