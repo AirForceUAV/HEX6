@@ -3,7 +3,7 @@
 import time,math,os,struct
 from vehicle import Drone
 from library import angle_heading_target,_angle,get_distance_metres
-from library import CancelWatcher,Singleton
+from library import CancelWatcher,Singleton,_angle
 from config import config
 
 con=config.get_lidar()

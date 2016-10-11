@@ -24,9 +24,10 @@ def on_message(client, userdata, msg):
 		[mqttPool.putRequest(req) for req in requests]
 	else:
 		CancelWatcher.Cancel=True
-		# drone.brake()
-		requests = threadpool.makeRequests(eval_wrapper,("drone.brake()",))
-		[mqttPool.putRequest(req) for req in requests]
+		time.sleep(1)
+		drone.brake()
+		# requests = threadpool.makeRequests(eval_wrapper,("drone.brake()",))
+		# [mqttPool.putRequest(req) for req in requests]
 
 
 def init_mqtt(ip,port=1883,username="",password=""):
