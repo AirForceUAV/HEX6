@@ -208,7 +208,7 @@ class Drone(object):
             target_angle=(360+self.get_heading()-heading)%360
             print 'Turn Left ',heading
 
-        heading+=config.get_angle()[0]    #Turn More Angle
+        heading+=5  #Turn More Angle
             
         # Create the CONDITION_YAW command using command_long_encode()
 

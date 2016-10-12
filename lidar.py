@@ -38,6 +38,12 @@ class Lidar(object):
         (quality,angle,distance) = struct.unpack(pointFmt,self.reply.read(struct.calcsize(pointFmt)))
         angle = (360 - angle) %360;
         return angle
+    def more_angle(self,anlge):
+        if angle>=0 and angle<=180:
+            angle+=10
+        else:
+            angle-=10
+        return angle
 
     def Avoid(self,target,velocity,checktime,deviation):
 
@@ -56,6 +62,7 @@ class Lidar(object):
             if _angle(angle_avoid)>deviation:
                 self.vehicle.brake(velocity)
                 print 'Turn',angle_avoid
+                anlge_avoid=self.more_angle(angle_avoid)
                 self.vehicle.condition_yaw2(angle_avoid)               
             self.vehicle.forward(velocity)
             time.sleep(checktime)
@@ -77,7 +84,7 @@ class Lidar(object):
                 return 1
             angle=angle_heading_target(current_location,target,self.vehicle.get_heading())
             angle_avoid=self.Decision(angle)
-            
+            anlge_avoid=self.more_angle(angle_avoid)
             Sin=math.sin(math.radians(angle_avoid))
             Cos=math.cos(math.radians(angle_avoid))
             forward_v = round(velocity*Cos,1)
@@ -99,7 +106,7 @@ class Lidar(object):
             self._log('Guided with Avoidance to {}'.format(target))
             
         if avoid_way==1:
-            self.Avoid(target,velocity,checktime,deviation):
+            self.Avoid(target,velocity,checktime,deviation)
         elif avoid_way==2:
             self.Avoid2(target,velocity.checktime)
 
@@ -115,7 +122,7 @@ class Lidar(object):
             self._log('RTL with Avoidance to {}'.format(target))
             
         if avoid_way==1:
-            self.Avoid(target,velocity,checktime,deviation):
+            self.Avoid(target,velocity,checktime,deviation)
         elif avoid_way==2:
             self.Avoid2(target,velocity.checktime)
 
